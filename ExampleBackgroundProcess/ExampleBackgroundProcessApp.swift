@@ -32,14 +32,21 @@ struct ExampleBackgroundProcessApp: App {
             task.progress.completedUnitCount = 0
 
             while shouldContinue {
-                // Do some work
+                sleep(1)
+
                 task.progress.completedUnitCount += 1
+                task.updateTitle("\(task.progress.completedUnitCount) / \(task.progress.totalUnitCount)", subtitle: "uploading...")
                 if task.progress.completedUnitCount == task.progress.totalUnitCount {
                     break
                 }
             }
 
-            task.setTaskCompleted(success: true)
+            let completed = task.progress.completedUnitCount >= task.progress.totalUnitCount
+            if completed {
+                task.updateTitle("Completed", subtitle: "")
+            }
+
+            task.setTaskCompleted(success: completed)
         }
     }
 }
