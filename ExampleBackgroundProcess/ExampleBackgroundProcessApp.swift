@@ -19,16 +19,26 @@ struct ExampleBackgroundProcessApp: App {
     init() {
         BGTaskScheduler.shared.register(
             forTaskWithIdentifier: ContinuousBackgroundConstants.taskIdentifier,
-            using: dispatch_queue_t.global(qos: .background)
+            using: nil
         ) { task in
-            guard let task = task as? BGContinuedProcessingTask else { return }
+            let task = task as! BGContinuedProcessingTask
 
-            task.progress.totalUnitCount = 100
-            for _ in 0..<100 {
-                task.progress.completedUnitCount += 1
+            var shouldContinue = true
+            task.expirationHandler = {
+                shouldContinue = false
             }
 
-            // タスクの正常終了を必ず明示！
+            task.progress.totalUnitCount = 100
+            task.progress.completedUnitCount = 0
+
+            while shouldContinue {
+                // Do some work
+                task.progress.completedUnitCount += 1
+                if task.progress.completedUnitCount == task.progress.totalUnitCount {
+                    break
+                }
+            }
+
             task.setTaskCompleted(success: true)
         }
     }
