@@ -11,12 +11,17 @@ struct ContentView: View {
     @State var viewModel = ContentViewModel()
 
     var body: some View {
-        VStack {
+        VStack(spacing: 12) {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Button("Start Background Task") {
                 viewModel.onStartBackgroundTaskTap()
+            }
+            Button("Start FoundationModels Session") {
+                Task {
+                    await viewModel.onStartFoundationModelsSessionTap()
+                }
             }
         }
         .padding()

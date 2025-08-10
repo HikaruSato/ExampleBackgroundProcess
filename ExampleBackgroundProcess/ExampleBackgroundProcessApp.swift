@@ -7,6 +7,8 @@
 
 import SwiftUI
 import BackgroundTasks
+import FoundationModels
+
 
 @main
 struct ExampleBackgroundProcessApp: App {
@@ -30,12 +32,15 @@ struct ExampleBackgroundProcessApp: App {
 
             task.progress.totalUnitCount = 100
             task.progress.completedUnitCount = 0
+//            let startDate = Date.now
 
             while shouldContinue {
                 sleep(1)
 
                 task.progress.completedUnitCount += 1
                 task.updateTitle("\(task.progress.completedUnitCount) / \(task.progress.totalUnitCount)", subtitle: "uploading...")
+//                let elapsedDate = Date.now.timeIntervalSince(startDate)
+//                task.updateTitle(String(format: "%.1f 秒経過", elapsedDate), subtitle: "")
                 if task.progress.completedUnitCount == task.progress.totalUnitCount {
                     break
                 }
