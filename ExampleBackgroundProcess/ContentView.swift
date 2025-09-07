@@ -18,11 +18,6 @@ struct ContentView: View {
             Button("Start Background Task") {
                 viewModel.onStartBackgroundTaskTap()
             }
-            Button("Start FoundationModels Session") {
-                Task {
-                    await viewModel.onStartFoundationModelsSessionTap()
-                }
-            }
         }
         .padding()
     }
