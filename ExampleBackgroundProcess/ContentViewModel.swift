@@ -18,8 +18,8 @@ class ContentViewModel {
                 title: "upload media",
                 subtitle: "uploading...",
             )
-            // An option that fails the submission of a continuous background task if the system can’t run it immediately.
-            // .failedにすると継続できない時点ですぐエラーに止まってしまう
+            // .queue はタスクリクエストはキューに追加され、後で実行されることがある(default)
+            // .fail はタスクリクエストをすぐに実行できない場合にエラーになる
             request.strategy = .queue
             try BGTaskScheduler.shared.submit(request)
         } catch {
