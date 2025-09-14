@@ -11,6 +11,36 @@ import FoundationModels
 
 @Observable
 class ContentViewModel {
+    @Generable
+    struct ContentTaggingResult {
+        @Guide(
+            description: "Most important actions in the input text.",
+            .maximumCount(2)
+        )
+        let actions: [String]
+
+
+        @Guide(
+            description: "Most important emotions in the input text.",
+            .maximumCount(3)
+        )
+        let emotions: [String]
+
+
+        @Guide(
+            description: "Most important objects in the input text.",
+            .maximumCount(5)
+        )
+        let objects: [String]
+
+
+        @Guide(
+            description: "Most important topics in the input text.",
+            .maximumCount(2)
+        )
+        let topics: [String]
+    }
+
     func onStartBackgroundTaskTap() {
         do {
             let request = BGContinuedProcessingTaskRequest(
@@ -28,14 +58,17 @@ class ContentViewModel {
     }
 
     func onStartFoundationModelsSessionTap() async {
-        // セッションの作成（必要に応じて instructions や options を追加可能）
-        let session = LanguageModelSession()
+        let model = SystemLanguageModel(useCase: .contentTagging)
 
-        let prompt = "簡単な朝食レシピを教えて"
-        let options = GenerationOptions(temperature: 1.0)
+        let session = LanguageModelSession(model: model, instructions: """
+            トピックのコンテキストで最も重要な 2 つのタグを指定します。
+            """
+        )
+
+        let prompt = "今日は友達とビーチで素敵なピクニックを楽しみました。"
 
         do {
-            let response = try await session.respond(to: prompt, options: options)
+            let response = try await session.respond(to: prompt, generating: ContentTaggingResult.self)
             print("生成された内容: \(response)")
         } catch {
             print("生成エラー: \(error)")
