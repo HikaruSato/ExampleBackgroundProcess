@@ -19,7 +19,7 @@ struct ExampleBackgroundProcessApp: App {
     }
 
     init() {
-        BGTaskScheduler.shared.register(
+        let result = BGTaskScheduler.shared.register(
             forTaskWithIdentifier: ContinuousBackgroundConstants.taskIdentifier,
             using: nil
         ) { task in
@@ -53,5 +53,6 @@ struct ExampleBackgroundProcessApp: App {
 
             task.setTaskCompleted(success: completed)
         }
+        assert(result)
     }
 }
